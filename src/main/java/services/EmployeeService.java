@@ -51,6 +51,8 @@ public class EmployeeService extends ServiceBase {
             //パスワードのハッシュ化
             String pass = EncryptUtil.getPasswordEncrypt(plainPass, pepper);
 
+            System.out.println("入力されたPWのハッシュ値:"+ pass);
+
             //社員番号とハッシュ化済パスワードを条件に未削除の従業員を1件取得する
             e = em.createNamedQuery(JpaConst.Q_EMP_GET_BY_CODE_AND_PASS, Employee.class)
                     .setParameter(JpaConst.JPQL_PARM_CODE, code)

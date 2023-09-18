@@ -5,6 +5,8 @@ import java.util.List;
 
 import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
+import actions.views.GoodConverter;
+import actions.views.GoodView;
 import actions.views.ReportConverter;
 import actions.views.ReportView;
 import constants.JpaConst;
@@ -147,6 +149,21 @@ public class ReportService extends ServiceBase {
         Report r = findOneInternal(rv.getId());
         ReportConverter.copyViewToModel(r, rv);
         em.getTransaction().commit();
+    }
+
+    public void createGd(GoodView gv) {
+        em.getTransaction().begin();
+        em.persist(GoodConverter.toModel(gv));
+        em.getTransaction().commit();
+    }
+
+    public long countAllThis(ReportView report) {
+
+        long count = (long) em.createNamedQuery(JpaConst.Q_GD_COUNT_ALL_THIS, Long.class)
+                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
+                .getSingleResult();
+
+        return count;
     }
 
 }

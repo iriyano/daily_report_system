@@ -6,6 +6,7 @@
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
+<c:set var="commGd" value="${ForwardConst.CMD_GOOD.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -40,11 +41,11 @@
             </tbody>
         </table>
 
-        <c:if test="${sessionScope.login_employee.id == report.employee.id}">
+            <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">いいね！</button>
+            <p><c:out value="${good}" />件のいいね</p>
             <p>
                 <a href="<c:url value='?action=${actRep}&command=${commEdt}&id=${report.id}' />">この日報を編集する</a>
             </p>
-        </c:if>
 
         <p>
             <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">一覧に戻る</a>
