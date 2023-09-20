@@ -21,7 +21,13 @@ import lombok.Setter;
 @NamedQueries({
     @NamedQuery(
             name = JpaConst.Q_GD_COUNT_ALL_THIS,
-            query = JpaConst.Q_GD_COUNT_ALL_THIS_DEF)
+            query = JpaConst.Q_GD_COUNT_ALL_THIS_DEF),
+    @NamedQuery(
+            name = JpaConst.Q_GD_GET_MY_GOOD,
+            query = JpaConst.Q_GD_GET_MY_GOOD_DEF),
+    @NamedQuery(
+            name = JpaConst.Q_GET_GOOD_EMP,
+            query = JpaConst.Q_GET_GOOD_EMP_DEF)
 })
 
 @Getter

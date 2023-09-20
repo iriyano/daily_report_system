@@ -151,6 +151,8 @@ public class ReportAction extends ActionBase {
 
         //idを条件に日報データを取得する
         ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+        EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+        List<GoodView> gvs = service.getMyGood(rv, ev);
 
         if (rv == null) {
             //該当の日報データが存在しない場合はエラー画面を表示
@@ -160,6 +162,8 @@ public class ReportAction extends ActionBase {
 
             putRequestScope(AttributeConst.REPORT, rv); //取得した日報データ
             putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
+            putRequestScope(AttributeConst.REP_MY_GOOD, gvs.size());
+            putRequestScope(AttributeConst.REP_GOOD_EMP, service.getGoodEmp(rv));
 
             //詳細画面を表示
             forward(ForwardConst.FW_REP_SHOW);
@@ -240,20 +244,39 @@ public class ReportAction extends ActionBase {
 
     public void good() throws ServletException, IOException {
 
-            ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
-            EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
-            GoodView gv = new GoodView(
-                    null,
-                    ev,
-                    rv);
+        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+        EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+        List<GoodView> gvs = service.getMyGood(rv, ev);
 
-            service.createGd(gv);
+        GoodView gv = new GoodView(
+                null,
+                ev,
+                rv);
 
-            putRequestScope(AttributeConst.REPORT, rv);
-            putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
+        if (gvs.size() == 0) {
 
-            forward(ForwardConst.FW_REP_SHOW);
+             service.createGd(gv);
+
+             putRequestScope(AttributeConst.REPORT, rv);
+             putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
+             putRequestScope(AttributeConst.REP_MY_GOOD, gvs.size() + 1);
+             putRequestScope(AttributeConst.REP_GOOD_EMP, service.getGoodEmp(rv));
+
+             forward(ForwardConst.FW_REP_SHOW);
+
+         } else {
+
+             service.destroyGd(gvs);
+
+             putRequestScope(AttributeConst.REPORT, rv);
+             putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
+             putRequestScope(AttributeConst.REP_MY_GOOD, gvs.size() - 1);
+             putRequestScope(AttributeConst.REP_GOOD_EMP, service.getGoodEmp(rv));
+
+             forward(ForwardConst.FW_REP_SHOW);
+
+         }
 
     }
 

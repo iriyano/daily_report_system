@@ -31,6 +31,16 @@ public class GoodConverter {
         return gvs;
     }
 
+    public static List<Good> toModelList(List<GoodView> list) {
+        List<Good> gvs = new ArrayList<>();
+
+        for (GoodView g : list) {
+            gvs.add(toModel(g));
+        }
+
+        return gvs;
+    }
+
     public static void copyViewToModel(Good g, GoodView gv) {
         g.setId(gv.getId());
         g.setEmployee(EmployeeConverter.toModel(gv.getEmployee()));

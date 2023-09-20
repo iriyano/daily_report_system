@@ -10,6 +10,8 @@ import actions.views.GoodView;
 import actions.views.ReportConverter;
 import actions.views.ReportView;
 import constants.JpaConst;
+import models.Employee;
+import models.Good;
 import models.Report;
 import models.validators.ReportValidator;
 
@@ -151,12 +153,14 @@ public class ReportService extends ServiceBase {
         em.getTransaction().commit();
     }
 
+    //いいねを登録する
     public void createGd(GoodView gv) {
         em.getTransaction().begin();
         em.persist(GoodConverter.toModel(gv));
         em.getTransaction().commit();
     }
 
+    //指定の日報IDを持つ日報についたいいね件数を全件取得
     public long countAllThis(ReportView report) {
 
         long count = (long) em.createNamedQuery(JpaConst.Q_GD_COUNT_ALL_THIS, Long.class)
@@ -165,5 +169,40 @@ public class ReportService extends ServiceBase {
 
         return count;
     }
+
+
+
+    //指定の日報にいいねした従業員のリストを取得
+    public List<EmployeeView> getGoodEmp(ReportView report) {
+
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_GET_GOOD_EMP, Employee.class)
+                            .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
+                            .getResultList();
+        return EmployeeConverter.toViewList(employees);
+    }
+
+    //指定の従業員が指定の日報につけたいいねのデータを取得
+    public List<GoodView> getMyGood(ReportView report, EmployeeView employee) {
+        List<Good> goods = em.createNamedQuery(JpaConst.Q_GD_GET_MY_GOOD, Good.class)
+                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
+                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(employee))
+                .getResultList();
+        return GoodConverter.toViewList(goods);
+    }
+
+
+    //指定のいいねデータを削除
+    public void destroyGd(List<GoodView> gvs) {
+
+        for (GoodView data: gvs) {
+
+        em.getTransaction().begin();
+        em.remove(GoodConverter.toModel(data));
+        em.getTransaction().commit();
+
+        }
+    }
+
+    //
 
 }

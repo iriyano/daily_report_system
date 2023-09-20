@@ -41,8 +41,28 @@
             </tbody>
         </table>
 
-            <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">いいね！</button>
-            <p><c:out value="${good}" />件のいいね</p>
+            <c:choose>
+                <c:when test="${myGood > 0}">
+                    <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">&#x1f9e1;</button>
+                </c:when>
+                <c:otherwise>
+                    <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">&#x2661;</button>
+                </c:otherwise>
+            </c:choose>
+
+            <c:if test="${good > 0}" >
+            <div class="balloonoya">
+                <p><c:out value="${good}" />件のいいね</p>
+                <span class="balloon">
+                    <ul>
+                        <c:forEach var="goodEmp" items="${goodEmps}">
+                            <li><c:out value="${goodEmp.name}" /></li>
+                        </c:forEach>
+                    </ul>
+                </span>
+            </div>
+            </c:if>
+
             <p>
                 <a href="<c:url value='?action=${actRep}&command=${commEdt}&id=${report.id}' />">この日報を編集する</a>
             </p>
