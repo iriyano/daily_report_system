@@ -43,10 +43,10 @@
 
             <c:choose>
                 <c:when test="${myGood > 0}">
-                    <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">&#x1f9e1;</button>
+                    <button type="button" value="ボタン" class="good" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'" >&#x1f9e1;</button>
                 </c:when>
                 <c:otherwise>
-                    <button type="button" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">&#x2661;</button>
+                    <button type="button" value="ボタン" class="good" onclick="location.href='<c:url value='?action=${actRep}&command=${commGd}&id=${report.id}' />'">&#x2661;</button>
                 </c:otherwise>
             </c:choose>
 

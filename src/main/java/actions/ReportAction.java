@@ -242,36 +242,41 @@ public class ReportAction extends ActionBase {
         }
     }
 
-    public void good() throws ServletException, IOException {
+    public void good() throws ServletException, IOException, NullPointerException {
 
 
         ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
         EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
-        List<GoodView> gvs = service.getMyGood(rv, ev);
+        List<GoodView> myGood = service.getMyGood(rv, ev);
+        //long myGoodCount = service.countMyGood(rv, ev);
 
         GoodView gv = new GoodView(
                 null,
                 ev,
                 rv);
 
-        if (gvs.size() == 0) {
+        if (myGood.size() == 0) {
 
              service.createGd(gv);
 
              putRequestScope(AttributeConst.REPORT, rv);
              putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
-             putRequestScope(AttributeConst.REP_MY_GOOD, gvs.size() + 1);
+             putRequestScope(AttributeConst.REP_MY_GOOD, 1);
              putRequestScope(AttributeConst.REP_GOOD_EMP, service.getGoodEmp(rv));
 
              forward(ForwardConst.FW_REP_SHOW);
 
          } else {
 
-             service.destroyGd(gvs);
+             for (GoodView mg : myGood) {
+
+             service.destroyGd(mg);
+
+             }
 
              putRequestScope(AttributeConst.REPORT, rv);
              putRequestScope(AttributeConst.REP_GOOD, service.countAllThis(rv));
-             putRequestScope(AttributeConst.REP_MY_GOOD, gvs.size() - 1);
+             putRequestScope(AttributeConst.REP_MY_GOOD, 0);
              putRequestScope(AttributeConst.REP_GOOD_EMP, service.getGoodEmp(rv));
 
              forward(ForwardConst.FW_REP_SHOW);

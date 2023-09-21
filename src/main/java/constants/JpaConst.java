@@ -89,8 +89,11 @@ public interface JpaConst {
     String Q_GD_GET_MY_GOOD = ENTITY_GD + ".getMyGood";
     String Q_GD_GET_MY_GOOD_DEF = "SELECT g FROM Good AS g WHERE g.report = :" + JPQL_PARM_REPORT + " AND g.employee = :" + JPQL_PARM_EMPLOYEE;
 
-    //指定の日報にいいねした従業員のリストをidの降順で取得
+    //指定の日報にいいねした従業員のリストをidの降順で最新5件のみ取得
     String Q_GET_GOOD_EMP = ENTITY_EMP + "getGoodEmp";
     String Q_GET_GOOD_EMP_DEF = "SELECT g.employee FROM Good AS g WHERE g.report = :" + JPQL_PARM_REPORT + " ORDER BY g.id DESC";
+
+    String Q_GD_COUNT_MY_GOOD = ENTITY_GD + ".countMyGood";
+    String Q_GD_COUNT_MY_GOOD_DEF = "SELECT COUNT(g) FROM Good AS g WHERE g.report = :" + JPQL_PARM_REPORT + " AND g.employee = :" + JPQL_PARM_EMPLOYEE;
 
 }

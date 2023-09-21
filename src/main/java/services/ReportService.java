@@ -170,6 +170,17 @@ public class ReportService extends ServiceBase {
         return count;
     }
 
+    //指定の従業員が指定の日報につけたいいねの件数を取得
+    public long countMyGood(ReportView report, EmployeeView employee) {
+
+        long count = (long) em.createNamedQuery(JpaConst.Q_GD_COUNT_MY_GOOD, Long.class)
+                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
+                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(employee))
+                .getSingleResult();
+
+        return count;
+    }
+
 
 
     //指定の日報にいいねした従業員のリストを取得
@@ -177,30 +188,31 @@ public class ReportService extends ServiceBase {
 
         List<Employee> employees = em.createNamedQuery(JpaConst.Q_GET_GOOD_EMP, Employee.class)
                             .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
+                            .setMaxResults(5)
                             .getResultList();
         return EmployeeConverter.toViewList(employees);
     }
 
     //指定の従業員が指定の日報につけたいいねのデータを取得
-    public List<GoodView> getMyGood(ReportView report, EmployeeView employee) {
-        List<Good> goods = em.createNamedQuery(JpaConst.Q_GD_GET_MY_GOOD, Good.class)
+    public List<GoodView> getMyGood(ReportView report, EmployeeView employee) throws NullPointerException {
+        List<Good> good = em.createNamedQuery(JpaConst.Q_GD_GET_MY_GOOD, Good.class)
                 .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(report))
                 .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(employee))
                 .getResultList();
-        return GoodConverter.toViewList(goods);
+
+        return GoodConverter.toViewList(good);
     }
 
 
     //指定のいいねデータを削除
-    public void destroyGd(List<GoodView> gvs) {
+    public void destroyGd(GoodView gv) {
 
-        for (GoodView data: gvs) {
+        Good mg = em.find(Good.class, gv.getId());
 
         em.getTransaction().begin();
-        em.remove(GoodConverter.toModel(data));
+        em.remove(mg);
         em.getTransaction().commit();
 
-        }
     }
 
     //
